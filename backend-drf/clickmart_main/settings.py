@@ -18,6 +18,15 @@ from decouple import config
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+def get_debug_flag():
+    value = str(config('DEBUG', default='False')).strip().lower()
+    if value in {'1', 'true', 'yes', 'on', 'development', 'dev'}:
+        return True
+    if value in {'0', 'false', 'no', 'off', 'release', 'prod', 'production'}:
+        return False
+    return False
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
@@ -25,7 +34,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = get_debug_flag()
 
 ALLOWED_HOSTS = []
 
@@ -96,7 +105,7 @@ DATABASES = {
         'USER': config('DB_USER'),
         'PASSWORD': config('DB_PASSWORD'),
         'HOST': config('DB_HOST'),
-        'PORT': config('DB_PORT')
+        'PORT': config('DB_PORT'),
     }
 }
 
